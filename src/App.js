@@ -1,26 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import Login from './Components/Login';
+import ImagesRenderer from './Components/ImagesRenderer';
+import { connect } from "react-redux";
+import { isUserLoggedIn } from './Redux/Actions/LoginActions';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+class App extends Component {
+  constructor(props){
+    super(props)
+  }
+ 
+  componentDidMount = () =>{
+    this.props.isUserLoggedIn()
+  }
+  render (){
+    if(!this.props.userLogged) return <Login />
+    return (
+      <div className="App">
+       <ImagesRenderer {...this.props}/>
+      </div>
+    );
+  }
+  
 }
 
-export default App;
+function mapStateToProps(state){
+  return {
+    userLogged : state.loginRed.userLoggedIn
+  }
+}
+
+export default connect(mapStateToProps,{isUserLoggedIn})(App);
